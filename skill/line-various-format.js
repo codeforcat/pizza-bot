@@ -30,8 +30,9 @@ module.exports = class LineVariousFormat {
         parser: async (postback, bot, event, context) => {
           if (typeof postback == "string"){
             return postback;
+          } else if (typeof postback == "object"){
+            return postback.data;
           }
-          return postback.data;
           throw new Error();
         }
       },
@@ -68,8 +69,9 @@ module.exports = class LineVariousFormat {
         parser: async (postback, bot, event, context) => {
           if (typeof postback == "string"){
             return postback;
+          } else if (typeof postback == "object"){
+            return postback.data;
           }
-          return postback.data;
           throw new Error();
         }
       },
@@ -91,8 +93,9 @@ module.exports = class LineVariousFormat {
         parser: async (postback, bot, event, context) => {
           if (typeof postback == "string"){
             return postback;
+          } else if (typeof postback == "object"){
+            return postback.data;
           }
-          return postback.data;
           throw new Error();
         }
       },
@@ -136,8 +139,9 @@ module.exports = class LineVariousFormat {
         parser: (postback, bot, event, context) => {
           if (typeof postback == "string"){
             return postback;
+          } else if (typeof postback == "object"){
+            return postback.data;
           }
-          return postback.data;
           throw new Error();
         }
       },
