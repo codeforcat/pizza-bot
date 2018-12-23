@@ -20,6 +20,25 @@ module.exports = class TemplateButtons {
               {type:"message",label:"クワトロフォルマッジ",text:"クワトロフォルマッジ"}
             ]
           }
+        },
+        parser: async (value, bot, event, context) => {
+          if (["マルゲリータ", "マリナーラ", "カプリチョーザ", "クワトロフォルマッジ"].includes(value)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (error){
+            bot.change_message_to_confirm("line_template_button_message", {
+              type: "text",
+              text: "恐れ入ります。ご注文のピザをお選びください。",
+            });
+          } else {
+            bot.queue({
+              type: "text",
+              text: `${value}ですね。ありがとうございます。`
+            });
+          }
         }
       }
     };
