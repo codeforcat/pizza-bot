@@ -5,22 +5,27 @@ module.exports = class HandlePastaOrder {
   // コンストラクター。このスキルで必要とする、または指定することができるパラメータを設定します。
   constructor() {
     this.required_parameter = {
-      pizza: {
+      pasta: {
         message_to_confirm: {
           type: "template",
-          altText: "ご注文のパスタはお決まりでしょうか？ マルゲリータ、マリナーラからお選びください。",
+          altText: "ご注文のパスタはお決まりでしょうか？ ペペロンチーノ、ジェノベーゼ、ナポリタンからお選びください。",
           template: {
             type: "buttons",
-            text: "ご注文のピザはお決まりでしょうか？",
+            text: "ご注文のパスタはお決まりでしょうか？",
             actions: [{
                 type: "postback",
-                label: "マルゲリータ",
-                data: "マルゲリータ"
+                label: "ペペロンチーノ",
+                data: "ペペロンチーノ"
               },
               {
                 type: "postback",
-                label: "マリナーラ",
-                data: "マリナーラ"
+                label: "ジェノベーゼ",
+                data: "ジェノベーゼ"
+              },
+              {
+                type: "postback",
+                label: "ナポリタン",
+                data: "ナポリタン"
               }
             ]
           }
@@ -29,24 +34,19 @@ module.exports = class HandlePastaOrder {
       size: {
         message_to_confirm: {
           type: "template",
-          altText: "パスタのサイズはいかがいたしましょうか？ S、M、Lからお選びください。",
+          altText: "パスタのサイズはいかがいたしましょうか？ 普通、大盛りからお選びください。",
           template: {
             type: "buttons",
             text: "サイズはいかがいたしましょうか？",
             actions: [{
                 type: "postback",
-                label: "S",
-                data: "S"
+                label: "普通",
+                data: "普通"
               },
               {
                 type: "postback",
-                label: "M",
-                data: "M"
-              },
-              {
-                type: "postback",
-                label: "L",
-                data: "L"
+                label: "大盛り",
+                data: "大盛り"
               }
             ]
           }
@@ -73,7 +73,7 @@ module.exports = class HandlePastaOrder {
     console.log(context.confirmed);
     let message = {
       type: "text",
-      text: `パスタの注文。${context.confirmed.name} 様、ご注文ありがとうございました！${context.confirmed.pizza.data}の${context.confirmed.size.data}サイズを30分以内にご指定の${context.confirmed.address}までお届けに上がります。`
+      text: `パスタの注文。${context.confirmed.name} 様、ご注文ありがとうございました！${context.confirmed.pasta.data}の${context.confirmed.size.data}サイズを30分以内にご指定の${context.confirmed.address}までお届けに上がります。`
     };
 
     await bot.reply(message);

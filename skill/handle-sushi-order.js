@@ -5,48 +5,27 @@ module.exports = class HandleSushiOrder {
   // コンストラクター。このスキルで必要とする、または指定することができるパラメータを設定します。
   constructor() {
     this.required_parameter = {
-      pizza: {
+      sushi_level: {
         message_to_confirm: {
           type: "template",
-          altText: "ご注文の寿司はお決まりでしょうか？ マルゲリータ、マリナーラからお選びください。",
+          altText: "ご注文の寿司はお決まりでしょうか？ 松、竹、梅からお選びください。",
           template: {
             type: "buttons",
-            text: "ご注文のピザはお決まりでしょうか？",
+            text: "ご注文の寿司はお決まりでしょうか？",
             actions: [{
                 type: "postback",
-                label: "マルゲリータ",
-                data: "マルゲリータ"
+                label: "松",
+                data: "松"
               },
               {
                 type: "postback",
-                label: "マリナーラ",
-                data: "マリナーラ"
-              }
-            ]
-          }
-        }
-      },
-      size: {
-        message_to_confirm: {
-          type: "template",
-          altText: "サイズはいかがいたしましょうか？ S、M、Lからお選びください。",
-          template: {
-            type: "buttons",
-            text: "サイズはいかがいたしましょうか？",
-            actions: [{
-                type: "postback",
-                label: "S",
-                data: "S"
+                label: "竹",
+                data: "竹"
               },
               {
                 type: "postback",
-                label: "M",
-                data: "M"
-              },
-              {
-                type: "postback",
-                label: "L",
-                data: "L"
+                label: "梅",
+                data: "梅"
               }
             ]
           }
@@ -73,7 +52,7 @@ module.exports = class HandleSushiOrder {
     console.log(context.confirmed);
     let message = {
       type: "text",
-      text: `寿司の注文${context.confirmed.name} 様、ご注文ありがとうございました！${context.confirmed.pizza.data}の${context.confirmed.size.data}サイズを30分以内にご指定の${context.confirmed.address}までお届けに上がります。`
+      text: `寿司の注文${context.confirmed.name} 様、ご注文ありがとうございました！${context.confirmed.sushi_level.data}を30分以内にご指定の${context.confirmed.address}までお届けに上がります。`
     };
 
     await bot.reply(message);
