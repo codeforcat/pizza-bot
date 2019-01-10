@@ -3,6 +3,12 @@
 const debug = require("debug")("bot-express:skill");
 
 const habits_array = ["ゴロゴロ", "ふみふみ", "スリスリ", "カカカッ"];
+const actions_array = [
+  {type:"message",label:"ゴロゴロ",text:"ゴロゴロ"},
+  {type:"message",label:"ふみふみ",text:"ふみふみ"},
+  {type:"message",label:"スリスリ",text:"スリスリ"},
+  {type:"message",label:"カカカッ",text:"カカカッ"}
+];
 let confirmed_habits_array = [];
 let new_habit_elements = [];
 let new_actions_array = [];
@@ -17,13 +23,10 @@ module.exports = class CatbotHabits1 {
           altText: "どれが気になるかな？",
           template: {
             type: "buttons",
+            thumbnailImageUrl: "https://www.dropbox.com/s/g7ith35zqjzhw6p/27_thumbnail.png?dl=1",
+            imageBackgroundColor: "#acf7fe",
             text: "どれが気になるかな？",
-            actions: [
-              {type:"message",label:"ゴロゴロ",text:"ゴロゴロ"},
-              {type:"message",label:"ふみふみ",text:"ふみふみ"},
-              {type:"message",label:"スリスリ",text:"スリスリ"},
-              {type:"message",label:"カカカッ",text:"カカカッ"}
-            ]
+            actions: new_actions_array.length > 0 ? new_actions_array : actions_array
           }
         },
         parser: async (value, bot, event, context) => {
@@ -74,19 +77,30 @@ module.exports = class CatbotHabits1 {
     });
 
     if (new_habit_elements.length > 0){
+      new_actions_array = [];
       new_habit_elements.forEach((value) => {
         new_actions_array.push({type:"message",label:value,text:value});
       });
       await bot.reply({
         type: "template",
-        altText: "こんなこと、知ってる？",
+        altText: "ほかのも気になる？",
         template: {
-          type: "buttons",
-          text: "こんなこと、知ってる？",
-          actions: new_actions_array
+          type: "confirm",
+          text: "ほかのも気になる？",
+          actions: [
+            {
+              "type": "message",
+              "label": "知りたい",
+              "text": "ほかの習性を知りたい"
+            },
+            {
+              "type": "message",
+              "label": "もういいよ",
+              "text": "もういいよ"
+            }
+          ]
         }
       });
-      new_actions_array = [];
     } else {
       await bot.reply({
         type: "text",
