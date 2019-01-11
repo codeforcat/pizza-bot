@@ -65,12 +65,15 @@ module.exports = class CatbotHabits1 {
               type: "text",
               text: message
             });
-          }
-          if (new_habit_elements.length < 1){
-            await bot.apply_parameter("other", "もういいよ");
+            if (new_habit_elements.length > 0) {
+              await bot.collect("other");
+            }
           }
         }
-      },
+      }
+    };
+
+    this.optional_parameter = {
       other: {
         message_to_confirm: {
           type: "template",
@@ -106,11 +109,19 @@ module.exports = class CatbotHabits1 {
           }
           throw new Error();
         },
-        sub_skill: ["catbot-habits-gorogoro"]
+        reaction: async (error, value, bot, event, context) => {
+          if (error){
+            await bot.reply({
+              type: "text",
+              text: "にゃ？\nもう一度言ってほしいにゃ。"
+            });
+            await bot.init();
+          }
+        },
       }
     };
 
-    this.clear_context_on_finish = new_habit_elements.length < 0;
+    this.clear_context_on_finish = true;
   }
 
   async finish(bot, event, context){

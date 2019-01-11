@@ -3,6 +3,9 @@
 const debug = require("debug")("bot-express:skill");
 
 module.exports = class CatbotHabitsGorogoro {
+  constructor(){
+    this.clear_context_on_finish = true;
+  }
 
   async finish(bot, event, context){
     await bot.reply({
