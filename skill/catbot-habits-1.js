@@ -53,13 +53,13 @@ module.exports = class CatbotHabits1 {
             });
           }
           let message;
-          if (context.confirmed.select_habits === "ゴロゴロ"){
+          if (value === "ゴロゴロ"){
             message = "ゴロゴロという鳴き声には、いろんな意味があるよ。\n大体は、ご機嫌なときのゴロゴロなんだけど、「ご飯ちょうだい」などの要求がらみのものやカラダの具合が悪いときにもゴロゴロするので、気をつけて見ておいてね。"
-          } else if (context.confirmed.select_habits === "ふみふみ"){
+          } else if (value === "ふみふみ"){
             message = "ふみふみは、赤ちゃん時代の思い出。\nネコは母乳を飲むとき、より母乳が出やすくなるように前脚で母親のおっぱいをマッサージするようにしながら飲みます。その時の心地よさや安心感を思い出すのか、大人になってからも、毛布や布団などのやわらかくて気持ちのいいものに触れると、ふみふみしたくなるみたいですね。"
-          } else if (context.confirmed.select_habits === "スリスリ"){
+          } else if (value === "スリスリ"){
             message = "縄張りの安心を得るためのマーキング。\n自分の縄張りにあるものや人に自分のにおいをつけるマーキング行動だよ。自分のにおいがついていないと落ち着かないんだね、きっと。"
-          } else if (context.confirmed.select_habits === "カカカッ"){
+          } else if (value === "カカカッ"){
             message = "ネコが窓に向かって、「カカカッ」といった鳴き声を出してることを聞いたことがありませんか？これは、獲物に対して、ネコが興奮しているときの反応で、クラッキングと言います。ちなみに、ライオンやトラは、同じネコ科の動物ですが、クラッキングはしません。"
           }
           await bot.queue({
@@ -95,8 +95,8 @@ module.exports = class CatbotHabits1 {
         parser: async (value, bot, event, context) => {
           new_actions_array = [];
           if (new_habit_elements.length > 0) {
-            new_habit_elements.forEach((value) => {
-              new_actions_array.push({type: "message", label: value, text: value});
+            new_habit_elements.forEach((elm) => {
+              new_actions_array.push({type: "message", label: elm, text: elm});
             });
           }
           if (["もういいよ"].includes(value)){
@@ -105,7 +105,8 @@ module.exports = class CatbotHabits1 {
             return value;
           }
           throw new Error();
-        }
+        },
+        sub_skill: ["catbot-habits-gorogoro"]
       }
     };
 
