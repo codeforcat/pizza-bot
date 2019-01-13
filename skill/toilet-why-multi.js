@@ -16,13 +16,13 @@ module.exports = class ToiletWhyMulti {
               {
                 type: "postback",
                 label: "トイレはどうしたらいいの？",
-                text: "トイレはどうしたらいいの？",
+                displayText: "トイレはどうしたらいいの？",
                 data: "toilet-how-many-get"
               },
               {
                 type: "postback",
                 label: "トイレ、いろんな種類があるけど？",
-                text: "トイレ、いろんな種類があるけど？",
+                displayText: "トイレ、いろんな種類があるけど？",
                 data: "toilet-types"
               },
               // {
