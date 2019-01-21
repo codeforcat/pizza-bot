@@ -23,8 +23,7 @@ module.exports = class CatbotHabits1 {
           altText: "どれが気になるかな？",
           template: {
             type: "buttons",
-            thumbnailImageUrl: "https://www.dropbox.com/s/g7ith35zqjzhw6p/27_thumbnail.png?dl=1",
-            imageBackgroundColor: "#fefae1",
+            thumbnailImageUrl: "https://www.dropbox.com/s/o2r7acj2bptfxt0/catbot-02_thumbnail.jpg?dl=1",
             text: "どれが気になるかな？",
             actions: new_actions_array.length > 0 ? new_actions_array : actions_array
           }
