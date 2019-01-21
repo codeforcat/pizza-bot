@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bot-express": "^0.5.25",
+    "bot-express": "^0.5.31",
     "dotenv": "^6.2.0",
     "express": "^4.16.4"
   }
