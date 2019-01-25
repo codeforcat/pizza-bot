@@ -17,6 +17,83 @@ module.exports = class CatbotHabits2 {
     ];
 
     this.required_parameter = {
+      return_skill: {
+        condition: async (bot, event, context) => {
+          if (context._flow !== "reply" && new_habit2_elements.length === 0) {
+            return false;
+          }
+          return true;
+        },
+        message_to_confirm: {
+          type: "template",
+          altText: "ほかのも気になる？",
+          template: {
+            type: "confirm",
+            text: "ほかのも気になる？",
+            actions: [
+              {
+                type: "postback",
+                label: "知りたい",
+                displayText: "知りたい",
+                data: "yes"
+              },
+              {
+                type: "postback",
+                label: "もういいよ",
+                displayText: "もういいよ",
+                data: "no"
+              }
+            ]
+          }
+        },
+        parser: async (value, bot, event, context) => {
+          new_actions2_array = [];
+          if (new_habit2_elements.length > 0) {
+            new_habit2_elements.forEach((elm) => {
+              new_actions2_array.push({type: "message", label: elm, text: elm});
+            });
+          }
+          if (["yes", "no"].includes(value.data)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (!error) {
+            if (new_habit2_elements.length > 0) {
+              await bot.collect({
+                select_habits: {
+                  condition: async (bot, event, context) => {
+                    if (context.confirmed.return_skill.data === "no") {
+                      await bot.reply({
+                        type: "text",
+                        text: "ほかに気になることがあったら話しかけてね！"
+                      });
+                      new_actions2_array = [];
+                      new_habit2_elements = [];
+                      confirmed_habits2_array = [];
+                      return false;
+                    }
+                    return true;
+                  },
+                  message_to_confirm: {
+                    type: "template",
+                    altText: "どれが気になるかな？",
+                    template: {
+                      type: "buttons",
+                      thumbnailImageUrl: "https://www.dropbox.com/s/o2r7acj2bptfxt0/catbot-02_thumbnail.jpg?dl=1",
+                      text: "どれが気になるかな？",
+                      actions: new_actions2_array
+                    }
+                  }
+                }
+              });
+            }
+          } else {
+            await bot.init();
+          }
+        }
+      },
       select_habits: {
         message_to_confirm: {
           type: "template",
@@ -41,12 +118,12 @@ module.exports = class CatbotHabits2 {
         },
         reaction: async (error, value, bot, event, context) => {
           if (error){
-            bot.change_message_to_confirm("select_habits", {
+            await bot.change_message_to_confirm("select_habits", {
               type: "text",
               text: "ごめんね。選択肢から選んでね。",
             });
           } else {
-            bot.queue({
+            await bot.queue({
               type: "text",
               text: `${value}が気になるんだね。`
             });
@@ -70,9 +147,6 @@ module.exports = class CatbotHabits2 {
               text: message
             });
             await bot.collect(parameter);
-            // if (new_habit2_elements.length > 0) {
-            //   await bot.collect("other");
-            // }
           }
         }
       }
@@ -91,55 +165,13 @@ module.exports = class CatbotHabits2 {
                 type: "postback",
                 label: "知りたい",
                 displayText: "知りたい",
-                data: "catbot-habits-amagami-approach"
+                data: "yes"
               },
               {
                 type: "postback",
                 label: "大丈夫",
                 displayText: "大丈夫",
-                data: "next"
-              }
-            ]
-          }
-        },
-        parser: async (value, bot, event, context) => {
-          if (["catbot-habits-amagami-approach", "next"].includes(value.data)){
-            return value;
-          }
-          throw new Error();
-        },
-        reaction: async (error, value, bot, event, context) => {
-          if (!error) {
-            if (value.data === "catbot-habits-amagami-approach") {
-              await bot.switch_skill({
-                name: value.data
-              });
-            } else {
-              await bot.collect("select_habits");
-            }
-          } else {
-            await bot.init();
-          }
-        }
-      },
-      other: {
-        message_to_confirm: {
-          type: "template",
-          altText: "ほかのも気になる？",
-          template: {
-            type: "confirm",
-            text: "ほかのも気になる？",
-            actions: [
-              {
-                type: "postback",
-                label: "知りたい",
-                displayText: "知りたい",
-                data: "other-habits"
-              },
-              {
-                type: "message",
-                label: "もういいよ",
-                text: "もういいよ"
+                data: "no"
               }
             ]
           }
@@ -151,19 +183,226 @@ module.exports = class CatbotHabits2 {
               new_actions2_array.push({type: "message", label: elm, text: elm});
             });
           }
-          if (["もういいよ"].includes(value)){
-            new_habit2_elements = [];
-            confirmed_habits2_array = [];
-            return value;
-          } else if (["other-habits"].includes(value.data)) {
+          if (["yes", "no"].includes(value.data)){
             return value;
           }
           throw new Error();
         },
         reaction: async (error, value, bot, event, context) => {
           if (!error) {
-            if (value.data === "other-habits") {
-              await bot.collect("select_habits");
+            if (value.data === "yes") {
+              await bot.switch_skill({
+                name: "catbot-habits-amagami-approach"
+              });
+            } else {
+              if (new_habit2_elements.length > 0) {
+                await bot.collect({
+                  select_habits: {
+                    message_to_confirm: {
+                      type: "template",
+                      altText: "どれが気になるかな？",
+                      template: {
+                        type: "buttons",
+                        thumbnailImageUrl: "https://www.dropbox.com/s/o2r7acj2bptfxt0/catbot-02_thumbnail.jpg?dl=1",
+                        text: "どれが気になるかな？",
+                        actions: new_actions2_array
+                      }
+                    }
+                  }
+                });
+              }
+            }
+          } else {
+            await bot.init();
+          }
+        }
+      },
+      mabataki: {
+        message_to_confirm: {
+          type: "template",
+          altText: "じっと見つめる理由を知りたい？",
+          template: {
+            type: "confirm",
+            text: "じっと見つめる理由を知りたい？",
+            actions: [
+              {
+                type: "postback",
+                label: "知りたい",
+                displayText: "知りたい",
+                data: "yes"
+              },
+              {
+                type: "postback",
+                label: "大丈夫",
+                displayText: "大丈夫",
+                data: "no"
+              }
+            ]
+          }
+        },
+        parser: async (value, bot, event, context) => {
+          new_actions2_array = [];
+          if (new_habit2_elements.length > 0) {
+            new_habit2_elements.forEach((elm) => {
+              new_actions2_array.push({type: "message", label: elm, text: elm});
+            });
+          }
+          if (["yes", "no"].includes(value.data)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (!error) {
+            if (value.data === "yes") {
+              await bot.switch_skill({
+                name: "catbot-habits-mabataki-open-eyes"
+              });
+            } else {
+              if (new_habit2_elements.length > 0) {
+                await bot.collect({
+                  select_habits: {
+                    message_to_confirm: {
+                      type: "template",
+                      altText: "どれが気になるかな？",
+                      template: {
+                        type: "buttons",
+                        thumbnailImageUrl: "https://www.dropbox.com/s/o2r7acj2bptfxt0/catbot-02_thumbnail.jpg?dl=1",
+                        text: "どれが気になるかな？",
+                        actions: new_actions2_array
+                      }
+                    }
+                  }
+                });
+              }
+            }
+          } else {
+            await bot.init();
+          }
+        }
+      },
+      kick: {
+        message_to_confirm: {
+          type: "template",
+          altText: "対処法を知りたい？",
+          template: {
+            type: "confirm",
+            text: "対処法を知りたい？",
+            actions: [
+              {
+                type: "postback",
+                label: "知りたい",
+                displayText: "知りたい",
+                data: "yes"
+              },
+              {
+                type: "postback",
+                label: "大丈夫",
+                displayText: "大丈夫",
+                data: "no"
+              }
+            ]
+          }
+        },
+        parser: async (value, bot, event, context) => {
+          new_actions2_array = [];
+          if (new_habit2_elements.length > 0) {
+            new_habit2_elements.forEach((elm) => {
+              new_actions2_array.push({type: "message", label: elm, text: elm});
+            });
+          }
+          if (["yes", "no"].includes(value.data)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (!error) {
+            if (value.data === "yes") {
+              await bot.switch_skill({
+                name: "catbot-habits-kick-approach"
+              });
+            } else {
+              if (new_habit2_elements.length > 0) {
+                await bot.collect({
+                  select_habits: {
+                    message_to_confirm: {
+                      type: "template",
+                      altText: "どれが気になるかな？",
+                      template: {
+                        type: "buttons",
+                        thumbnailImageUrl: "https://www.dropbox.com/s/o2r7acj2bptfxt0/catbot-02_thumbnail.jpg?dl=1",
+                        text: "どれが気になるかな？",
+                        actions: new_actions2_array
+                      }
+                    }
+                  }
+                });
+              }
+            }
+          } else {
+            await bot.init();
+          }
+        }
+      },
+      undokai: {
+        message_to_confirm: {
+          type: "template",
+          altText: "対処法を知りたい？",
+          template: {
+            type: "confirm",
+            text: "対処法を知りたい？",
+            actions: [
+              {
+                type: "postback",
+                label: "知りたい",
+                displayText: "知りたい",
+                data: "yes"
+              },
+              {
+                type: "postback",
+                label: "大丈夫",
+                displayText: "大丈夫",
+                data: "no"
+              }
+            ]
+          }
+        },
+        parser: async (value, bot, event, context) => {
+          new_actions2_array = [];
+          if (new_habit2_elements.length > 0) {
+            new_habit2_elements.forEach((elm) => {
+              new_actions2_array.push({type: "message", label: elm, text: elm});
+            });
+          }
+          if (["yes", "no"].includes(value.data)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (!error) {
+            if (value.data === "yes") {
+              await bot.switch_skill({
+                name: "catbot-habits-undokai-approach"
+              });
+            } else {
+              if (new_habit2_elements.length > 0) {
+                await bot.collect({
+                  select_habits: {
+                    message_to_confirm: {
+                      type: "template",
+                      altText: "どれが気になるかな？",
+                      template: {
+                        type: "buttons",
+                        thumbnailImageUrl: "https://www.dropbox.com/s/o2r7acj2bptfxt0/catbot-02_thumbnail.jpg?dl=1",
+                        text: "どれが気になるかな？",
+                        actions: new_actions2_array
+                      }
+                    }
+                  }
+                });
+              }
             }
           } else {
             await bot.init();
@@ -176,6 +415,7 @@ module.exports = class CatbotHabits2 {
   }
 
   async finish(bot, event, context){
+    console.log(context);
     if (new_habit2_elements.length === 0) {
       await bot.reply({
         type: "text",

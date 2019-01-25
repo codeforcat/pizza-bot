@@ -41,12 +41,12 @@ module.exports = class CatbotHabits1 {
         },
         reaction: async (error, value, bot, event, context) => {
           if (error){
-            bot.change_message_to_confirm("select_habits", {
+            await bot.change_message_to_confirm("select_habits", {
               type: "text",
               text: "ごめんね。選択肢から選んでね。",
             });
           } else {
-            bot.queue({
+            await bot.queue({
               type: "text",
               text: `${value}が気になるんだね。`
             });

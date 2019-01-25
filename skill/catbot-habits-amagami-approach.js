@@ -1,5 +1,7 @@
 'use strict';
 
+Promise = require('bluebird');
+
 module.exports = class CatbotHabitsAmagamiApproach {
   async begin(bot, event, context){
     await bot.queue({
@@ -8,7 +10,6 @@ module.exports = class CatbotHabitsAmagamiApproach {
     });
   }
 
-  // コンストラクター。このスキルで必要とする、または指定することができるパラメータを設定します。
   constructor() {
     this.clear_context_on_finish = true;
     this.required_parameter = {
@@ -59,20 +60,21 @@ module.exports = class CatbotHabitsAmagamiApproach {
       }
     }
   }
-  // パラメーターが全部揃ったら実行する処理を記述します。
+
   async finish(bot, event, context) {
     let data = context.confirmed.how_many.data;
+    let message;
     if (data === "one") {
-      await bot.reply({
-        type: "text",
-        text: "他のネコ（兄弟）と一緒に育っていないと、噛む力加減が分からない場合があります。"
-      });
+      message = "他のネコ（兄弟）と一緒に育っていないと、噛む力加減が分からない場合があります。";
     } else {
-      await bot.reply({
-        type: "text",
-        text: "多頭飼いの場合は、生後１ヶ月半頃から兄弟でのじゃれあいが激しくなり、噛む力加減を覚えます。強く噛みすぎると他の兄弟に怒られるのです。"
-      });
+      message = "多頭飼いの場合は、生後１ヶ月半頃から兄弟でのじゃれあいが激しくなり、噛む力加減を覚えます。強く噛みすぎると他の兄弟に怒られるのです。"
     }
+
+    await bot.send(context.event.source.userId, {
+      type: "text",
+      text: message
+    });
+
     await bot.switch_skill({
       name: "catbot-habits-2"
     });
