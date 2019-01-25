@@ -2,7 +2,7 @@
 
 const debug = require("debug")("bot-express:skill");
 
-module.exports = class CatbotHabitsGorogoro {
+module.exports = class CatbotHabitsSurisuriOtherCat {
   constructor(){
     this.clear_context_on_finish = true;
   }
@@ -10,7 +10,7 @@ module.exports = class CatbotHabitsGorogoro {
   async finish(bot, event, context){
     await bot.reply({
       type: "text",
-      text: "音の大小とネコの気持ちは関係ないみたいだよ。小さいゴロゴロのネコもいるから耳をすまして聴いてあげよう。"
+      text: "お互い安心するための、においの交換みたいなもんですね。"
     })
   }
 };
