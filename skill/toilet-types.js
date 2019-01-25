@@ -23,16 +23,31 @@ module.exports = class ToiletTypes {
               {
                 type: "postback",
                 label: "どこに置いたらいい？",
-                text: "どこに置いたらいい？",
+                displayText: "どこに置いたらいい？",
                 data: "toilet-where"
               },
               {
                 type: "postback",
-                label: "猫砂は、何がいい？",
-                text: "猫砂は、何がいい？",
+                label: "猫砂は何がいい？",
+                displayText: "猫砂は何がいい？",
                 data: "toilet-sand-type"
               }
             ]
+          }
+        },
+        parser: async (value, bot, event, context) => {
+          if (["toilet-where", "toilet-sand-type"].includes(value.data)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (error){
+            await bot.reply({
+              type: "text",
+              text: "にゃ？\nもう一度言ってほしいにゃ。"
+            });
+            await bot.init();
           }
         }
       }
@@ -42,9 +57,8 @@ module.exports = class ToiletTypes {
   async finish(bot, event, context) {
     let intent_name = context.confirmed.another_q.data;
     console.log("**************intent_name ********: "+intent_name);
-    bot.switch_skill({
-        name: intent_name
-    })
-
+    await bot.switch_skill({
+      name: intent_name
+    });
   }
 };

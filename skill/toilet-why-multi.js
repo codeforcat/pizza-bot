@@ -15,14 +15,14 @@ module.exports = class ToiletWhyMulti {
             actions: [
               {
                 type: "postback",
-                label: "トイレはどうしたらいいの？",
-                displayText: "トイレはどうしたらいいの？",
+                label: "いくつ用意するの？",
+                displayText: "いくつ用意するの？",
                 data: "toilet-how-many-get"
               },
               {
                 type: "postback",
-                label: "トイレ、いろんな種類があるけど？",
-                displayText: "トイレ、いろんな種類があるけど？",
+                label: "いろんな種類があるけど？",
+                displayText: "いろんな種類があるけど？",
                 data: "toilet-types"
               },
               // {
@@ -38,6 +38,21 @@ module.exports = class ToiletWhyMulti {
               //   data: "toilet-sand"
               // }
             ]
+          }
+        },
+        parser: async (value, bot, event, context) => {
+          if (["toilet-how-many-get", "toilet-types"].includes(value.data)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (error){
+            await bot.reply({
+              type: "text",
+              text: "にゃ？\nもう一度言ってほしいにゃ。"
+            });
+            await bot.init();
           }
         }
         // reaction: async (error, value, bot, event, context) => {
@@ -61,9 +76,8 @@ module.exports = class ToiletWhyMulti {
   async finish(bot, event, context) {
     let intent_name = context.confirmed.another_q2.data;
     console.log("*******ToiletWhyMulti*******intent_name ********: "+intent_name);
-    bot.switch_skill({
-        name: intent_name
-    })
-
+    await bot.switch_skill({
+      name: intent_name
+    });
   }
 };

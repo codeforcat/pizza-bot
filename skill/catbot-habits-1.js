@@ -110,13 +110,9 @@ module.exports = class CatbotHabits1 {
         },
         reaction: async (error, value, bot, event, context) => {
           if (error){
-            await bot.reply({
-              type: "text",
-              text: "にゃ？\nもう一度言ってほしいにゃ。"
-            });
             await bot.init();
           }
-        },
+        }
       }
     };
 
@@ -124,12 +120,19 @@ module.exports = class CatbotHabits1 {
   }
 
   async finish(bot, event, context){
-    await bot.reply({
-      type: "text",
-      text: "ほかに気になることがあったら話しかけてね！"
-    });
-    new_actions_array = [];
-    new_habit_elements = [];
-    confirmed_habits_array = [];
+    if (new_habit_elements.length === 0) {
+      await bot.reply({
+        type: "text",
+        text: "ほかに気になることがあったら話しかけてね！"
+      });
+      new_actions_array = [];
+      new_habit_elements = [];
+      confirmed_habits_array = [];
+    } else {
+      await bot.reply({
+        type: "text",
+        text: "にゃ？\nもう一度言ってほしいにゃ。"
+      });
+    }
   }
 };

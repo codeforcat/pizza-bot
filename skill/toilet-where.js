@@ -22,17 +22,32 @@ module.exports = class ToiletWhere {
             actions: [
               {
                 type: "postback",
-                label: "トイレ、いろんな種類があるけど？",
-                text: "トイレ、いろんな種類があるけど？",
+                label: "いろんな種類があるけど？",
+                displayText: "いろんな種類があるけど？",
                 data: "toilet-types"
               },
               {
                 type: "postback",
-                label: "猫砂は、何がいい？",
-                text: "猫砂は、何がいい？",
+                label: "猫砂は何がいい？",
+                displayText: "猫砂は何がいい？",
                 data: "toilet-sand"
               }
             ]
+          }
+        },
+        parser: async (value, bot, event, context) => {
+          if (["toilet-types", "toilet-sand"].includes(value.data)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (error){
+            await bot.reply({
+              type: "text",
+              text: "にゃ？\nもう一度言ってほしいにゃ。"
+            });
+            await bot.init();
           }
         }
       }
@@ -42,9 +57,8 @@ module.exports = class ToiletWhere {
   async finish(bot, event, context) {
     let intent_name = context.confirmed.another_q.data;
     console.log("**************intent_name ********: "+intent_name);
-    bot.switch_skill({
-        name: intent_name
-    })
-
+    await bot.switch_skill({
+      name: intent_name
+    });
   }
 };

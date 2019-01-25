@@ -11,7 +11,7 @@ module.exports = class ToiletHowManyGet {
   constructor() {
     this.clear_context_on_finish = true;
     this.required_parameter = {
-      param_a: {
+      another_q: {
         message_to_confirm: {
           type: "template",
           altText: "他にも気になることある？",
@@ -20,14 +20,14 @@ module.exports = class ToiletHowManyGet {
             text: "他にも気になることある？",
             actions: [{
                 type: "postback",
-                label: "どうして、複数いるの？",
-                displayText: "どうして、複数いるの？",
+                label: "どうして複数いるの？",
+                displayText: "どうして複数いるの？",
                 data: "toilet-why-multi"
               },
               {
                 type: "postback",
-                label: "トイレ、いろんな種類があるけど？",
-                displayText: "トイレ、いろんな種類があるけど？",
+                label: "いろんな種類があるけど？",
+                displayText: "いろんな種類があるけど？",
                 data: "toilet-types"
               },
               {
@@ -38,18 +38,31 @@ module.exports = class ToiletHowManyGet {
               }
             ]
           }
+        },
+        parser: async (value, bot, event, context) => {
+          if (["toilet-why-multi", "toilet-types", "toilet-where"].includes(value.data)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (error){
+            await bot.reply({
+              type: "text",
+              text: "にゃ？\nもう一度言ってほしいにゃ。"
+            });
+            await bot.init();
+          }
         }
-
-
       }
     }
   }
 
   async finish(bot, event, context) {
-    let intent_name = context.confirmed.another_q2.data;
+    let intent_name = context.confirmed.another_q.data;
     console.log("*******ToiletWhyMulti*******intent_name ********: "+intent_name);
-    bot.switch_skill({
-        name: "toilet-why-multi"
-    })
+    await bot.switch_skill({
+      name: intent_name
+    });
   }
-}
+};
