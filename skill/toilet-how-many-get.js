@@ -2,7 +2,7 @@
 
 module.exports = class ToiletHowManyGet {
   async begin(bot, event, context) {
-    bot.queue({
+    await bot.queue({
       type: "text",
       text: "複数設置が基本です。ネコの数より1つ多く置いてあげてね。1匹なら2個、2匹なら3個という具合です。"
     });

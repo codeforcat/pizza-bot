@@ -31,9 +31,16 @@ module.exports = class CatbotWelcome {
               },
               {
                 type: "postback",
+                label: "しぐさについて",
+                displayText: "しぐさについて",
+                data: "catbot-habits-1"
+              }
+              ,
+              {
+                type: "postback",
                 label: "習性について",
                 displayText: "習性について",
-                data: "catbot-habits-1"
+                data: "catbot-habits-2"
               }
             ]
           }

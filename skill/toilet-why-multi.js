@@ -67,10 +67,10 @@ module.exports = class ToiletWhyMulti {
     this.clear_context_on_finish = true;
   }
   async begin(bot, event, context){
-      bot.queue({
-          type: "text",
-          text: "あなたの留守中や夜間などお掃除できないことがありますよね。そんなときでも、清潔なトイレを利用できるように、複数設置してあげてください。"
-      });
+    await bot.queue({
+      type: "text",
+      text: "あなたの留守中や夜間などお掃除できないことがありますよね。そんなときでも、清潔なトイレを利用できるように、複数設置してあげてください。"
+    });
   }
   // パラメーターが全部揃ったら実行する処理を記述します。
   async finish(bot, event, context) {

@@ -2,10 +2,10 @@
 // 一問一答形式
 module.exports = class ToiletTypes {
   async begin(bot, event, context){
-      bot.queue({
-          type: "text",
-          text: "猫がのびのびできるよう、屋根がないタイプで、大きさは、カラダの向きをかえられるくらい、猫の1.5倍くらいが目安。"
-      });
+    await bot.queue({
+      type: "text",
+      text: "猫がのびのびできるよう、屋根がないタイプで、大きさは、カラダの向きをかえられるくらい、猫の1.5倍くらいが目安。"
+    });
   }
 
   // コンストラクター。このスキルで必要とする、または指定することができるパラメータを設定します。

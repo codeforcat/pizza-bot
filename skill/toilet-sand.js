@@ -2,10 +2,10 @@
 // 一問一答形式
 module.exports = class ToiletSand {
   async begin(bot, event, context){
-      bot.queue({
-          type: "text",
-          text: "一般的には、自然の砂に近い「鉱物系」を好む傾向があるようだけど、いろいろ試してみて、猫に合うものを選んであげてね。"
-      });
+    await bot.queue({
+      type: "text",
+      text: "一般的には、自然の砂に近い「鉱物系」を好む傾向があるようだけど、いろいろ試してみて、猫に合うものを選んであげてね。"
+    });
   }
 
   // コンストラクター。このスキルで必要とする、または指定することができるパラメータを設定します。
