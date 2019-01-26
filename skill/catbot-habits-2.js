@@ -415,7 +415,6 @@ module.exports = class CatbotHabits2 {
   }
 
   async finish(bot, event, context){
-    console.log(context);
     if (new_habit2_elements.length === 0) {
       await bot.reply({
         type: "text",
