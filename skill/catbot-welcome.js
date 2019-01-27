@@ -4,8 +4,8 @@ module.exports = class CatbotWelcome {
   async begin(bot, event, context) {
     await bot.queue({
       type: "image",
-      originalContentUrl: "https://www.dropbox.com/s/5sqbgavkuk82hzy/catbot-05_original.jpg?dl=1",
-      previewImageUrl: "https://www.dropbox.com/s/jumbjoxy1z12pyr/catbot-05_preview.jpg?dl=1"
+      originalContentUrl: "https://code4cat.org/catbot/catbot-05_original.jpg",
+      previewImageUrl: "https://code4cat.org/catbot/catbot-05_preview.jpg"
     });
     await bot.queue({
       type: "text",
