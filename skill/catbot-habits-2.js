@@ -32,16 +32,14 @@ module.exports = class CatbotHabits2 {
             text: "ほかのも気になる？",
             actions: [
               {
-                type: "postback",
+                type: "message",
                 label: "知りたい",
-                displayText: "知りたい",
-                data: "yes"
+                text: "知りたい"
               },
               {
-                type: "postback",
+                type: "message",
                 label: "もういいよ",
-                displayText: "もういいよ",
-                data: "no"
+                text: "もういいよ"
               }
             ]
           }
@@ -53,7 +51,7 @@ module.exports = class CatbotHabits2 {
               new_actions2_array.push({type: "message", label: elm, text: elm});
             });
           }
-          if (["yes", "no"].includes(value.data)){
+          if (["知りたい", "もういいよ"].includes(value)){
             return value;
           }
           throw new Error();
@@ -64,7 +62,7 @@ module.exports = class CatbotHabits2 {
               await bot.collect({
                 select_habits: {
                   condition: async (bot, event, context) => {
-                    if (context.confirmed.return_skill.data === "no") {
+                    if (context.confirmed.return_skill === "もういいよ") {
                       await bot.reply({
                         type: "text",
                         text: "ほかに気になることがあったら話しかけてね！"

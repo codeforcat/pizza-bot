@@ -43,7 +43,59 @@ module.exports = class CatbotHabitsAmagamiApproach {
           }
         },
         parser: async (value, bot, event, context) => {
-          if (["one", "two", "many"].includes(value.data)){
+          if (["one", "two", "many"].includes(value.data)) {
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
+          if (!error) {
+            let data = context.confirmed.how_many.data;
+            let message;
+            if (data === "one") {
+              message = "他のネコ（兄弟）と一緒に育っていないと、噛む力加減が分からない場合があります。";
+            } else {
+              message = "多頭飼いの場合は、生後１ヶ月半頃から兄弟でのじゃれあいが激しくなり、噛む力加減を覚えます。強く噛みすぎると他の兄弟に怒られるのです。"
+            }
+
+            await bot.queue({
+              type: "text",
+              text: message
+            });
+          } else {
+            await bot.reply({
+              type: "text",
+              text: "にゃ？\nもう一度言ってほしいにゃ。"
+            });
+            await bot.init();
+          }
+        }
+      },
+      another_q: {
+        message_to_confirm: {
+          type: "template",
+          altText: "ほかのも気になる？",
+          template: {
+            type: "confirm",
+            text: "ほかのも気になる？",
+            actions: [
+              {
+                type: "postback",
+                label: "知りたい",
+                displayText: "知りたい",
+                data: "yes"
+              },
+              {
+                type: "postback",
+                label: "もういいよ",
+                displayText: "もういいよ",
+                data: "no"
+              }
+            ]
+          }
+        },
+        parser: async (value, bot, event, context) => {
+          if (["yes", "no"].includes(value.data)){
             return value;
           }
           throw new Error();
@@ -62,21 +114,11 @@ module.exports = class CatbotHabitsAmagamiApproach {
   }
 
   async finish(bot, event, context) {
-    let data = context.confirmed.how_many.data;
-    let message;
-    if (data === "one") {
-      message = "他のネコ（兄弟）と一緒に育っていないと、噛む力加減が分からない場合があります。";
-    } else {
-      message = "多頭飼いの場合は、生後１ヶ月半頃から兄弟でのじゃれあいが激しくなり、噛む力加減を覚えます。強く噛みすぎると他の兄弟に怒られるのです。"
-    }
-
-    await bot.send(context.event.source.userId, {
-      type: "text",
-      text: message
-    });
-
     await bot.switch_skill({
-      name: "catbot-habits-2"
+      name: "catbot-habits-2",
+      parameters: {
+        return_skill: context.confirmed.another_q.data === "yes" ? "知りたい" : "もういいよ"
+      }
     });
   }
 };

@@ -41,6 +41,50 @@ module.exports = class CatbotHabitsMabatakiOpenEyes {
           throw new Error();
         },
         reaction: async (error, value, bot, event, context) => {
+          if (!error) {
+            await bot.queue({
+              type: "text",
+              text: "ネコの「遊んで視線」に気づけないで、ほったらかしだと、読んでる新聞や雑誌の上に乗ってくる、パソコンのキーボードの上に座るなど、実力行使を受けることになるので、普段からよくコミュニケーションしておきましょうね。"
+            });
+          } else {
+            await bot.reply({
+              type: "text",
+              text: "にゃ？\nもう一度言ってほしいにゃ。"
+            });
+            await bot.init();
+          }
+        }
+      },
+      another_q: {
+        message_to_confirm: {
+          type: "template",
+          altText: "ほかのも気になる？",
+          template: {
+            type: "confirm",
+            text: "ほかのも気になる？",
+            actions: [
+              {
+                type: "postback",
+                label: "知りたい",
+                displayText: "知りたい",
+                data: "yes"
+              },
+              {
+                type: "postback",
+                label: "もういいよ",
+                displayText: "もういいよ",
+                data: "no"
+              }
+            ]
+          }
+        },
+        parser: async (value, bot, event, context) => {
+          if (["yes", "no"].includes(value.data)){
+            return value;
+          }
+          throw new Error();
+        },
+        reaction: async (error, value, bot, event, context) => {
           if (error){
             await bot.reply({
               type: "text",
@@ -54,13 +98,11 @@ module.exports = class CatbotHabitsMabatakiOpenEyes {
   }
 
   async finish(bot, event, context) {
-    await bot.send(context.event.source.userId, {
-      type: "text",
-      text: "ネコの「遊んで視線」に気づけないで、ほったらかしだと、読んでる新聞や雑誌の上に乗ってくる、パソコンのキーボードの上に座るなど、実力行使を受けることになるので、普段からよくコミュニケーションしておきましょうね。"
-    });
-
     await bot.switch_skill({
-      name: "catbot-habits-2"
+      name: "catbot-habits-2",
+      parameters: {
+        return_skill: context.confirmed.another_q.data === "yes" ? "知りたい" : "もういいよ"
+      }
     });
   }
 };
